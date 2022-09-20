@@ -16,6 +16,7 @@ import infoRouter from './routes/infoRouter.js';
 import randomNumberRouter from './routes/randomNumberRouter.js';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers'
+import { on } from 'events';
 
 /*-----------------------------------------------*/
 /*                  instances                    */
@@ -113,9 +114,10 @@ io.on('connection', async socket => {
 /*                 server listen                 */
 /*-----------------------------------------------*/
 
+console.log(process.argv)
 const PORT = yargs(hideBin(process.argv)).argv.port || 8080
+
 const server = httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${server.address().port}`);
 })
-
 server.on('error', error => console.log(`Error en servidor ${error}`));
