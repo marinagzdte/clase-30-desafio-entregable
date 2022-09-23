@@ -8,6 +8,7 @@ import { Server } from 'socket.io';
 import config from './config.js';
 import DbContainer from './containers/DbContainer.js';
 import FirebaseMessageDao from './daos/FirebaseMessageDao.js';
+import MongoDbMessagesDao from './daos/MongoDbMessageDao.js';
 import { getFiveRandomProducts } from './utils/fakerUtils.js';
 import { normalizeMessages } from './utils/normalizrUtils.js';
 import registerRouter from './routes/registerRouter.js';
@@ -25,7 +26,8 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 const productContainer = new DbContainer(config.mariaDb, 'products');
-const messageContainer = new FirebaseMessageDao('messages');
+//const messageContainer = new FirebaseMessageDao('messages');
+const messageContainer = new MongoDbMessagesDao();
 
 /*-----------------------------------------------*/
 /*                  app setup                    */
