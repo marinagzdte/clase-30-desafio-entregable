@@ -1,11 +1,13 @@
 {
   "type": "module",
   "scripts": {
-    "build": "node ./src/tables.js",
-    "start": "node ./src/server.js"
+    "start": " cd ./src && pm2 start ./server.js --watch --",
+    "start -fork": "cd ./src && pm2 start ./server.js --watch --",
+    "start -cluster": ""
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cluster": "^0.7.7",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.1",
@@ -20,6 +22,7 @@
     "normalizr": "3.6.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "pm2": "^5.1.2",
     "socket.io": "^4.5.1",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.0.11",
