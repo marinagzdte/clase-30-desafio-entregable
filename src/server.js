@@ -44,15 +44,15 @@ app.use(passport.session())
 app.engine('hbs', engine({
     extname: 'hbs',
     defaultLayout: 'index.hbs',
-    layoutsDir: "../../public/views/layouts",
-    partialsDir: "../../public/views/partials"
+    layoutsDir: "../public/views/layouts",
+    partialsDir: "../public/views/partials"
 }));
 app.set('view engine', 'hbs');
-app.set('views', "../../public/views");
+app.set('views', "../public/views");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('../../public'));
+app.use(express.static('../public'));
 
 app.use(registerRouter)
 app.use(loginRouter)
@@ -108,4 +108,10 @@ io.on('connection', async socket => {
     });
 });
 
-export default httpServer;
+export const serverListen = (PORT) => {
+    const server = httpServer.listen(PORT, async () => {
+        console.log(`Servidor fork escuchando en el puerto ${server.address().port}`);
+    })
+    server.on('error', error => console.log(`Error en servidor ${error}`));
+    return server;
+}
