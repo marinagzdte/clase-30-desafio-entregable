@@ -15,7 +15,6 @@ const mode = argv.mode
 const PORT = yargsPort || 8080
 
 if (mode === 'cluster') {
-    // clustering
     const cpus = os.cpus().length;
     if (cluster.isPrimary) {
         console.log(`Servidor primario ${process.pid} online`)
