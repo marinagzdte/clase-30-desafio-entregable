@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
+const res = dotenv.config({ path: './.env' });
 
 export default {
     mariaDb: {
