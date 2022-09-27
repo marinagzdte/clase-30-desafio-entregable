@@ -1,18 +1,35 @@
-import httpServer from './server.js';
+import { serverListen } from './server.js';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers'
 import mongoose from "mongoose";
 import config from '../src/config.js';
+import cluster from "cluster";
+import os from 'os';
 
-console.log('argumentos process.argv')
-console.log(process.argv)
-const yargsPort = yargs(hideBin(process.argv)).argv.port
-console.log(`yargs port es ${yargsPort}`)
+await mongoose.connect(config.mongodb.connectionString, config.mongodb.options)
+
+const argv = yargs(hideBin(process.argv)).argv;
+
+const yargsPort = argv.port
+const mode = argv.mode
 const PORT = yargsPort || 8080
 
-const server = httpServer.listen(PORT, async () => {
-    await mongoose.connect(config.mongodb.connectionString, config.mongodb.options)
-    console.log(`Servidor escuchando en el puerto ${server.address().port}`);
-})
+if (mode === 'cluster') {
+    // clustering
+    const cpus = os.cpus().length;
+    if (cluster.isPrimary) {
+        console.log(`Servidor primario ${process.pid} online`)
 
-server.on('error', error => console.log(`Error en servidor ${error}`));
+        for (let i = 0; i < cpus; i++) {
+            cluster.fork();
+        }
+
+        cluster.on('exit', (worker, code, signal) => {
+            console.log(`worker ${worker.process.pid} died`);
+        });
+    } else {
+        serverListen(PORT);
+    }
+} else {
+    serverListen(PORT);
+}
